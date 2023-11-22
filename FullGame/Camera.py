@@ -35,8 +35,8 @@ class Camera:
         """
         Inicia el proceso de detección facial y reconocimiento de movimientos.
         """        
-        mp_dibujo, confi_dibu = self._dibujar_maya_facial()
-        mp_malla_facial, malla_facial = self._crear_maya_facial()
+        mp_dibujo, confi_dibu = self._dibujar_malla_facial()
+        mp_malla_facial, malla_facial = self._crear_malla_facial()
 
         while True:
             ret, frame = self.cap.read()
