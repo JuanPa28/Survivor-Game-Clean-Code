@@ -11,6 +11,12 @@ from Camera import Camera
 
 class Game:
     def __init__(self, size):
+        """
+        Inicializa el juego con un tamaño de mapa específico y crea instancias de jugador, monstruo y cámara.
+        
+        Parámetros:
+        size (int): Tamaño del mapa cuadrado.
+        """
         self.size = size
         self.player = Player(self)
         self.monster = Monster(self)
@@ -19,31 +25,39 @@ class Game:
         self.camera = Camera()
 
     def place_random_objects(self):
-        # Coloca objetos aleatorios (comida y armas) en el mapa
+        """
+        Coloca objetos aleatorios (comida y armas) en el mapa.
+        """
         self.place_random_food()
         self.place_random_weapons()
 
     def place_random_food(self):
+        """
+        Coloca comida aleatoriamente en el mapa.
+        """
         food = ["[🍩]"]
-        # Coloca comida aleatoriamente en el mapa
-        num_food = random.randint(1 , self.size * 2)
+        num_food = random.randint(1, self.size * 2)
         for _ in range(num_food):
             x = random.randint(1, self.size - 1)
             y = random.randint(1, self.size - 1)
             self.grid[x][y] = Food(random.choice(food))
 
     def place_random_weapons(self):
+        """
+        Coloca armas aleatoriamente en el mapa.
+        """
         weapons = ["[🔫]", "[🏹]", "[🩼]", "[💉]"]
         weapons_damages = [25, 35, 20, 30]
         weapons_names = ["Pistola", "Arco", "Muleta", "Veneno"]
-        # Coloca armas aleatoriamente en el mapa
         for i in range(len(weapons)):
             x = random.randint(1, self.size - 1)
             y = random.randint(1, self.size - 1)
             self.grid[x][y] = Weapon(weapons[i], weapons_damages[i], weapons_names[i])
 
     def play(self):
-        # Ciclo principal del juego
+        """
+        Ciclo principal del juego que continúa hasta que el jugador o el monstruo mueran.
+        """
         while self.player.is_alive() and self.monster.is_alive():
             self.print_game_state()
             self.player_turn()
@@ -57,9 +71,12 @@ class Game:
             print("GRAVE... EL monstruo te derrotó, perdiste el juego.")
 
     def print_game_state(self):
-        # Imprime el estado actual del juego
-        print("PH PLAYER =", self.player.health, "Inventario =", [item.name for item in self.player.inventory])
-        print("Inventario de curaciones: ", [item.symbol for item in self.player.inventory_food])
+        """
+        Imprime el estado actual del juego.
+        """
+        print("PH PLAYER =", self.player.health)
+        print("Inventario de armas:", [item.name for item in self.player.inventory])
+        print("Inventario de curaciones:", [item.symbol for item in self.player.inventory_food])
         print("PH Monstruo =", self.monster.health)
         print("Mapa:")
         for i, row in enumerate(self.grid):
@@ -75,7 +92,9 @@ class Game:
             print()
 
     def player_turn(self):
-        # Turno del jugador
+        """
+        Maneja el turno del jugador permitiendo movimientos, ataques y acciones especiales.
+        """
         valid_actions = ["comer", "atacar", "derecha", "izquierda", "arriba", "abajo"]
         action = self.get_player_action(valid_actions)
         if action == "derecha":
@@ -102,7 +121,9 @@ class Game:
                 print("Debes estar adyacente al monstruo para atacarlo")
 
     def get_player_action(self, valid_actions):
-        # Obtiene la acción seleccionada por el jugador
+        """
+        Obtiene la acción seleccionada por el jugador.
+        """
         while True:
             if keyboard.is_pressed('space'):
                 action = self.camera.proceso()
@@ -111,7 +132,9 @@ class Game:
                 print("Acción inválida. Intenta nuevamente.")
 
     def move_player(self, direction):
-        # Mueve al jugador en la dirección especificada
+        """
+        Mueve al jugador en la dirección especificada.
+        """
         delta_x, delta_y = self.get_movement_delta(direction)
         new_x = self.player.x + delta_x
         new_y = self.player.y + delta_y
@@ -124,7 +147,9 @@ class Game:
             print("Movimiento inválido. Intenta nuevamente.")
 
     def get_movement_delta(self, direction):
-        # Devuelve el cambio en las coordenadas x e y para la dirección especificada
+        """
+        Devuelve el cambio en las coordenadas x e y para la dirección especificada.
+        """
         if direction == "arriba":
             return (-1, 0)
         elif direction == "abajo":
@@ -135,11 +160,15 @@ class Game:
             return (0, 1)
 
     def is_valid_position(self, x, y):
-        # Verifica si la posición especificada es válida dentro del mapa
+        """
+        Verifica si la posición especificada es válida dentro del mapa.
+        """
         return 0 <= x < self.size and 0 <= y < self.size
 
     def resolve_encounter(self):
-        # Resuelve el encuentro entre el jugador y el objeto/monstruo en su posición actual
+        """
+        Resuelve el encuentro entre el jugador y el objeto/monstruo en su posición actual.
+        """
         object_at_position = self.grid[self.player.x][self.player.y]
 
         if isinstance(object_at_position, Food):
@@ -152,10 +181,14 @@ class Game:
             self.player.attack_monster(self.monster)
 
     def monster_turn(self):
-        # Turno del monstruo
+        """
+        Maneja el turno del monstruo permitiendo movimientos y ataques al jugador.
+        """
         self.monster.move_randomly()
         if self.monster.x == self.player.x and self.monster.y == self.player.y:
             self.monster.attack_player(self.player)
 
-game = Game(5)
-game.play()
+# Lógica de inicialización y ejecución del juego
+if __name__ == "__main__":
+    game = Game(5)
+    game.play()

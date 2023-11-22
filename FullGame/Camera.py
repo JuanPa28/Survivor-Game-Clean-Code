@@ -8,21 +8,33 @@ import numpy as np
 
 class Camera:
     def __init__(self):
+        """
+        Inicializa la cámara capturando el video y configurando sus dimensiones.
+        """
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 1280)
         self.cap.set(4, 720)
 
-    def _dibujar_maya_facial(self):
+    def _dibujar_malla_facial(self):
+        """
+        Crea las configuraciones para dibujar la malla facial.
+        """
         mp_dibujo = mp.solutions.drawing_utils
         confi_dibu = mp_dibujo.DrawingSpec(thickness=1, circle_radius=1)
         return mp_dibujo, confi_dibu
 
-    def _crear_maya_facial(self):
+    def _crear_malla_facial(self):
+        """
+        Crea la malla facial utilizando la librería MediaPipe.
+        """
         mp_malla_facial = mp.solutions.face_mesh
         malla_facial = mp_malla_facial.FaceMesh(max_num_faces=1)
         return mp_malla_facial, malla_facial
 
-    def proceso(self):
+    def proceso(self):        
+        """
+        Inicia el proceso de detección facial y reconocimiento de movimientos.
+        """        
         mp_dibujo, confi_dibu = self._dibujar_maya_facial()
         mp_malla_facial, malla_facial = self._crear_maya_facial()
 
